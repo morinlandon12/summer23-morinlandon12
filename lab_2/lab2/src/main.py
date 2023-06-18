@@ -1,5 +1,6 @@
 from datetime import datetime
 import numpy as np
+import os
 
 from fastapi import FastAPI, HTTPException
 from fastapi.openapi.utils import get_openapi
@@ -50,7 +51,9 @@ class HousingModel:
     
 
 app = FastAPI(openapi_url='/openapi.json', docs_url='/docs')
-model_path = '/Users/landon/Documents/GitHub/summer23-morinlandon12/lab_2/lab2/trainer/model_pipeline.pkl'
+model_path = os.getcwd() + '/trainer/model_pipeline.pkl'
+
+
 model = HousingModel(model_path)
 
 
