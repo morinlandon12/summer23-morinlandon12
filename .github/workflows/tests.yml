@@ -9,10 +9,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Change working directory
-        working-directory: ./lab_2/lab2
-
       - name: Checkout code
+        working-directory: ./lab_2/lab2
         uses: actions/checkout@v3
 
       - name: Setup Python
@@ -27,7 +25,9 @@ jobs:
         run: curl -sSL https://install.python-poetry.org | python3 -
 
       - name: Install dependencies
+        working-directory: ./lab_2/lab2
         run: poetry install --no-root --no-interaction --no-ansi --only main
 
       - name: Run pytest
+        working-directory: ./lab_2/lab2
         run: poetry run pytest
