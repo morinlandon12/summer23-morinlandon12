@@ -9,6 +9,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Change working directory
+        run: cd ./lab_2/lab2
+
       - name: Checkout code
         uses: actions/checkout@v3
 
