@@ -25,7 +25,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./lab_2/lab2
-        run: poetry install --no-root --no-interaction --no-ansi --only main
+        run: poetry install --no-root --no-interaction --no-ansi
 
       - name: Run pytest
         working-directory: ./lab_2/lab2
