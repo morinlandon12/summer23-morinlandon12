@@ -1,12 +1,13 @@
 #Use official Python 3.11
 FROM python:3.11-slim as venv
 
-#Security updates
+#Build dependencies
 RUN apt-get update \
-    && apt-get upgrade -y \
-    && apt-get install curl -y \
-    && rm -rf /var/lib/apt/list/*
-
+    && apt-get install -y \
+         curl \
+         build-essential \
+         libffi-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 #Install poetry
 ENV POETRY_VERSION=1.4.2
@@ -35,3 +36,6 @@ COPY . ./
 EXPOSE 8000
 
 CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+HEALTHCHECK --interval=1m --timeout=3s \
+  CMD curl -f http://0.0.0.0:8000/health || exit 1

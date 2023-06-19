@@ -75,3 +75,16 @@ def test_predict_endpoint_incorrect_inputs():
                 }
     response = client.post("/predict", json=payload)
     assert response.status_code == 422
+
+def test_predict_endpoint_missing_inputs():
+    payload =  {
+            "MedInc": 8.3252,
+            "HouseAge": 41.0,
+            "AveRooms": 6.98412698,
+            "Population": 322.0,
+            "AveOccup": 2.55555556,
+            "Lat": 37.88,
+            "Long": -122.23
+                }
+    response = client.post("/predict", json=payload)
+    assert response.status_code == 422

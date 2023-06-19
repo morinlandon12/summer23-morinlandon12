@@ -7,7 +7,7 @@ from fastapi.openapi.utils import get_openapi
 
 import joblib
 
-from pydantic import BaseModel, PositiveFloat, ValidationError, root_validator
+from pydantic import BaseModel, PositiveFloat, ValidationError, root_validator, validator
 
 class UserInput(BaseModel):
     MedInc: PositiveFloat
@@ -28,7 +28,13 @@ class UserInput(BaseModel):
         if missing_fields:
             raise ValueError(f"Missing required input field(s): {', '.join(missing_fields)}")
         return values
-
+    
+    @validator("*")
+    def validate_my_field(cls, value):
+        if isinstance(value, str):
+            raise ValueError("my_field must be a float, not a string")
+        return value
+    
 
 class InferenceOutput(BaseModel):
     Price: PositiveFloat
@@ -52,10 +58,7 @@ class HousingModel:
 
 app = FastAPI(openapi_url='/openapi.json', docs_url='/docs')
 model_path = os.getcwd() + '/trainer/model_pipeline.pkl'
-
-
 model = HousingModel(model_path)
-
 
 @app.get('/hello')
 async def get_name(name: str = None):
