@@ -16,8 +16,8 @@ class UserInput(BaseModel):
     AveBedrms: PositiveFloat
     Population: PositiveFloat
     AveOccup: PositiveFloat
-    Lat: confloat(ge=42, le=32)
-    Long: confloat(ge=-114, le=-124)
+    Lat: confloat(le=42, ge=32)
+    Long: confloat(le=-114, ge=-124)
 
     @root_validator(pre=True)
     def check_input_fields(cls, values):
