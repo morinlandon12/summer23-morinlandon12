@@ -7,17 +7,17 @@ from fastapi.openapi.utils import get_openapi
 
 import joblib
 
-from pydantic import BaseModel, PositiveFloat, ValidationError, root_validator, validator, confloat
+from pydantic import BaseModel, PositiveFloat, ValidationError, root_validator, validator, confloat, Extra
 
-class UserInput(BaseModel):
+class UserInput(BaseModel, extra=Extra.forbid):
     MedInc: PositiveFloat
     HouseAge: PositiveFloat
     AveRooms: PositiveFloat
     AveBedrms: PositiveFloat
     Population: PositiveFloat
     AveOccup: PositiveFloat
-    Lat: confloat(le=42, ge=32)
-    Long: confloat(le=-114, ge=-124)
+    Lat: confloat(le=43, ge=32.5)
+    Long: confloat(le=-114, ge=-125)
 
     @root_validator(pre=True)
     def check_input_fields(cls, values):
@@ -57,7 +57,7 @@ class HousingModel:
     
 
 app = FastAPI(openapi_url='/openapi.json', docs_url='/docs')
-model_path = os.getcwd() + '/trainer/model_pipeline.pkl'
+model_path = 'model_pipeline.pkl'
 model = HousingModel(model_path)
 
 @app.get('/hello')

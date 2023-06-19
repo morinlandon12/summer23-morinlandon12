@@ -62,7 +62,7 @@ def test_predict_endpoint_correct_inputs():
     assert "Price" in data
     assert isinstance(data['Price'], float)
 
-def test_predict_endpoint_incorrect_inputs():
+def test_predict_endpoint_incorrect_inputs_type():
     payload =  {
             "MedInc": "eight",
             "HouseAge": 41.0,
@@ -85,6 +85,63 @@ def test_predict_endpoint_missing_inputs():
             "AveOccup": 2.55555556,
             "Lat": 37.88,
             "Long": -122.23
+                }
+    response = client.post("/predict", json=payload)
+    assert response.status_code == 422
+
+def test_predict_improper_field():
+    payload =  {
+            "wrong": 8.3252,
+            "HouseAge": 41.0,
+            "AveRooms": 6.98412698,
+            "AveBedrms": 1.02380952,
+            "Population": 322.0,
+            "AveOccup": 2.55555556,
+            "Lat": 37.88,
+            "Long": -122.23
+                }
+    response = client.post("/predict", json=payload)
+    assert response.status_code == 422
+
+def test_predict_additional_field():
+    payload =  {
+            "MedInc": 8.3252,
+            "HouseAge": 41.0,
+            "AveRooms": 6.98412698,
+            "AveBedrms": 1.02380952,
+            "Population": 322.0,
+            "AveOccup": 2.55555556,
+            "Lat": 37.88,
+            "Long": -122.23,
+            "Additional": 521
+                }
+    response = client.post("/predict", json=payload)
+    assert response.status_code == 422
+
+def test_predict_improper_value():
+    payload =  {
+            "MedInc": 8.3252,
+            "HouseAge": 41.0,
+            "AveRooms": -6.98412698,
+            "AveBedrms": 1.02380952,
+            "Population": 322.0,
+            "AveOccup": 2.55555556,
+            "Lat": 37.88,
+            "Long": -122.23,
+                }
+    response = client.post("/predict", json=payload)
+    assert response.status_code == 422
+
+def test_predict_empty_value():
+    payload =  {
+            "MedInc": None,
+            "HouseAge": 41.0,
+            "AveRooms": 6.98412698,
+            "AveBedrms": 1.02380952,
+            "Population": 322.0,
+            "AveOccup": 2.55555556,
+            "Lat": 37.88,
+            "Long": -122.23,
                 }
     response = client.post("/predict", json=payload)
     assert response.status_code == 422
