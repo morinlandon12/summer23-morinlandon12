@@ -7,7 +7,7 @@ from fastapi.openapi.utils import get_openapi
 
 import joblib
 
-from pydantic import BaseModel, PositiveFloat, ValidationError, root_validator, validator
+from pydantic import BaseModel, PositiveFloat, ValidationError, root_validator, validator, confloat
 
 class UserInput(BaseModel):
     MedInc: PositiveFloat
@@ -16,8 +16,8 @@ class UserInput(BaseModel):
     AveBedrms: PositiveFloat
     Population: PositiveFloat
     AveOccup: PositiveFloat
-    Lat: float
-    Long: float
+    Lat: confloat(ge=42, le=32)
+    Long: confloat(ge=-114, le=-124)
 
     @root_validator(pre=True)
     def check_input_fields(cls, values):
