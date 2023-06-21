@@ -20,6 +20,7 @@ This application is an API that allows a user to input the following house featu
 
 
 Please note that the API /predict endpoint will only handle houses in the state of California, and will return an error for all other lat/long ranges. Additionally, errors will be returned for Median Income, Age of the House, Number of Rooms, Bedrooms, Population, and Occupancy if the inputs are not positive floats. 
+For more information on this dataset, please refer to sklearn's documentation on the California housing dataset [here](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html).
 
 This API also allows users to pass their names to a /hello endpoint, which will return 
 
