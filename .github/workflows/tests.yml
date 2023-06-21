@@ -1,5 +1,5 @@
 name: lab2-github-actions
-run-name: ${{ github.actor }} is learning GitHub Actions
+run-name: ${{ github.actor }} is performing lab2 checks
 on:
   push:
     branches: [ "main" ]

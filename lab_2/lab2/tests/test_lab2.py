@@ -1,47 +1,56 @@
+import pytest
 from fastapi.testclient import TestClient
 import urllib.parse
 
-
+from src import __version__
 from src.main import app
 
 client = TestClient(app)
 
+
+def test_version():
+    assert __version__ == "0.1.0"
+
+
+def test_hello_bad_parameter():
+    response = client.get("/hello?bob=name")
+    assert response.status_code == 422
+    assert response.json() == {
+        "detail": [
+            {
+                "loc": ["query", "name"],
+                "msg": "field required",
+                "type": "value_error.missing",
+            }
+        ]
+    }
+
+
 def test_root():
-    response = client.get('/')
-    assert response.status_code == 501
+    response = client.get("/")
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Not Found"}
 
-def test_name():
-    name = 'Landon'
-    response = client.get(f'/hello?name={name}')
-    assert response.json() == {'message': f'Hello {name}'}
+
+@pytest.mark.parametrize(
+    "test_input, expected",
+    [("james", "james"), ("bob", "bob"), ("BoB", "BoB"), (100, 100)],
+)
+def test_hello(test_input, expected):
+    response = client.get(f"/hello?name={test_input}")
     assert response.status_code == 200
+    assert response.json() == {"message": f"Hello {expected}"}
 
-def test_no_name():
-    response = client.get('/hello')
-    assert response.json() == {'detail': 'missing name parameter'}
-    assert response.status_code == 400
-
-def test_empty_name():
-    name = ''
-    response = client.get(f'/hello?name={name}')
-    assert response.json() == {'detail': 'empty name parameter'}
-    assert response.status_code == 400
-
-def test_special():
-    name = "!#$%&'()*+,-./:;<=>?@[\]^_{|}~"
-    encoded_name = urllib.parse.quote(name)
-    response = client.get(f"/hello?name={encoded_name}")
-    assert response.json() == {'message': f"Hello {name}"}    
-    assert response.status_code == 200
 
 def test_docs():
-    response = client.get('/docs')
+    response = client.get("/docs")
     assert response.status_code == 200
 
-def test_open_api():
-    response = client.get('/openapi.json')
-    assert response.status_code == 200 
-    assert '3' in response.json()['openapi']
+
+def test_hello_multiple_parameter_with_good_and_bad():
+    response = client.get("/hello?name=james&bob=name")
+    assert response.status_code == 200
+    assert response.json() == {"message": "Hello james"}
 
 def test_predict_endpoint_correct_inputs():
     payload =  {
@@ -61,6 +70,7 @@ def test_predict_endpoint_correct_inputs():
     assert isinstance(data, dict)
     assert "Price" in data
     assert isinstance(data['Price'], float)
+
 
 def test_predict_endpoint_incorrect_inputs_type():
     payload =  {
@@ -118,7 +128,7 @@ def test_predict_additional_field():
     response = client.post("/predict", json=payload)
     assert response.status_code == 422
 
-def test_predict_improper_value():
+def test_predict_invalid_value():
     payload =  {
             "MedInc": 8.3252,
             "HouseAge": 41.0,
@@ -145,3 +155,8 @@ def test_predict_empty_value():
                 }
     response = client.post("/predict", json=payload)
     assert response.status_code == 422
+
+def health_check():
+        response = client.get('/health')
+        assert response.status_code == 200
+        assert isinstance(datetime.fromisoformat(response.json()['time']), datetime)

@@ -2,8 +2,10 @@
 IMAGE_NAME=lab2
 APP_NAME=lab2
 
-cd lab2/trainer
+cd lab2
 rm model_pipeline.pkl
+
+cd trainer
 python train.py
 mv model_pipeline.pkl ../
 
@@ -17,8 +19,7 @@ docker stop ${APP_NAME}
 docker rm ${APP_NAME}
 
 # rebuild and run the new image
-echo "Building Docker Image"
-echo "Running Built Docker Image"
+echo "Building & running Docker Image"
 
 docker build -t ${IMAGE_NAME} .
 docker run -d --name ${APP_NAME} -p 8000:8000 ${IMAGE_NAME}
@@ -124,7 +125,7 @@ curl -o /dev/null -s -w "%{http_code}\n" -X POST "http://localhost:8000/predict"
 "Additional": 521
 }' 
 
-echo -e "testing '/predict' endpoint with additional feature:"
+echo -e "testing '/predict' endpoint with invalid value:"
 curl -o /dev/null -s -w "%{http_code}\n" -X POST "http://localhost:8000/predict" -H "Content-Type: application/json" -d\
 '{
 "MedInc": 8.3252,
@@ -154,9 +155,9 @@ echo -e "========================================="
 
 # Stop and Remove the running container
 echo "Stopping the running container"
-docker kill api-container
+docker stop ${IMAGE_NAME}
 
 echo "Removing Docker container and image:"
-docker rm api-container
-docker rmi hello-api
+docker rm ${IMAGE_NAME}
+docker rmi ${APP_NAME}
 
