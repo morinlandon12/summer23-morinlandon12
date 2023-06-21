@@ -1,22 +1,23 @@
 from datetime import datetime
 import numpy as np
+import os
 
 from fastapi import FastAPI, HTTPException
 from fastapi.openapi.utils import get_openapi
 
 import joblib
 
-from pydantic import BaseModel, PositiveFloat, ValidationError, root_validator
+from pydantic import BaseModel, PositiveFloat, ValidationError, root_validator, validator, confloat, Extra
 
-class UserInput(BaseModel):
+class UserInput(BaseModel, extra=Extra.forbid):
     MedInc: PositiveFloat
     HouseAge: PositiveFloat
     AveRooms: PositiveFloat
     AveBedrms: PositiveFloat
     Population: PositiveFloat
     AveOccup: PositiveFloat
-    Lat: float
-    Long: float
+    Lat: confloat(le=43, ge=32.5)
+    Long: confloat(le=-114, ge=-125)
 
     @root_validator(pre=True)
     def check_input_fields(cls, values):
@@ -27,7 +28,13 @@ class UserInput(BaseModel):
         if missing_fields:
             raise ValueError(f"Missing required input field(s): {', '.join(missing_fields)}")
         return values
-
+    
+    @validator("*")
+    def validate_my_field(cls, value):
+        if isinstance(value, str):
+            raise ValueError("my_field must be a float, not a string")
+        return value
+    
 
 class InferenceOutput(BaseModel):
     Price: PositiveFloat
@@ -50,36 +57,18 @@ class HousingModel:
     
 
 app = FastAPI(openapi_url='/openapi.json', docs_url='/docs')
-model_path = '/Users/landon/Documents/GitHub/summer23-morinlandon12/lab_2/lab2/trainer/model_pipeline.pkl'
+model_path = 'model_pipeline.pkl'
 model = HousingModel(model_path)
 
-
-@app.get('/hello')
-async def get_name(name: str = None):
-    if name:
-        message = f'Hello {name}'
-    elif name == '':
-        raise HTTPException(status_code=400, detail = 'empty name parameter')
-    else:
-        # Not inputting a name is a client error and as such
-        # should be accompanied by a 400 error.
-        raise HTTPException(status_code = 400, detail = 'missing name parameter')
-    return {'message': message}
-
-
-@app.get('/')
-async def root():
-    # The request to this endpoint is not to be handled by the server.
-    raise HTTPException(status_code = 501, detail = 'not implemented')
+@app.get("/hello")
+async def hello(name: str):
+    return {"message": f"Hello {name}"}
 
 
 @app.post('/predict', response_model=InferenceOutput)
 def predict(input: UserInput):
-    try:
-        output = model.predict(input)
-        return output
-    except ValueError as e: 
-        raise HTTPException(status_code = 422, detail = e)
+    output = model.predict(input)
+    return output
 
 @app.get('/health')
 async def health():
