@@ -1,0 +1,32 @@
+name: lab2-github-actions
+run-name: ${{ github.actor }} is performing lab2 checks
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.11'
+
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Install poetry
+        run: curl -sSL https://install.python-poetry.org | python3 -
+
+      - name: Install dependencies
+        working-directory: ./lab_2/lab2
+        run: poetry install --no-root --no-interaction --no-ansi
+
+      - name: Run pytest
+        working-directory: ./lab_2/lab2
+        run: poetry run pytest -vv -s
