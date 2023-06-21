@@ -73,7 +73,7 @@ This application can be run locally or through Docker. If running locally, in a 
 poetry run uvicorn main:app --reload
 ```
 
-This will open a port on your local machine, which will allow you to access the API endpoints. Copy the url that is provided to you and paste it into your browser to access the endpoint to access the browser based application at the /hello endpoint. Type _/hello?name={Insert Your Name}_ to access that application. You must input an alphanumeric string. No name query or an empty name query parameter will result in a 400 error. Accessing the root domain (i.e. no _/hello_ extension) will result in a 501 error. You may access the API docs at the _/docs_ directory and an OpenAPI json object at _/openapi.json_
+This will open a port on your local machine, which will allow you to access the API endpoints. Copy the url that is provided to you and paste it into your browser to access the endpoint to access the browser based application at the /hello endpoint. Type _/hello?name={Insert Your Name}_ to access that application. You must input an alphanumeric string. No name query or an empty name query parameter will result in a 422 error. You may access the API docs at the _/docs_ directory and an OpenAPI json object at _/openapi.json_
 
 Examples of valid queries to the /hello endpoint include:
 
