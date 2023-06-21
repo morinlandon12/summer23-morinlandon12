@@ -29,4 +29,4 @@ jobs:
 
       - name: Run pytest
         working-directory: ./lab_2/lab2
-        run: poetry run pytest
+        run: poetry run pytest -vv -s
