@@ -7,19 +7,19 @@ This application is an API that allows a user to batch input the following house
 
         ```{json}
         {"houses":[{
-        "MedInc": PositiveFloat,
-        "HouseAge": PositiveFloat,
-        "AveRooms": PositiveFloat,
-        "AveBedrms": PositiveFloat,
-        "Population": PositiveFloat,
-        "AveOccup": PositiveFloat,
-        "Lat": confloat(le=43, ge=32.5),
-        "Long": confloat(le=-114, ge=-125)
+        "MedInc": float,
+        "HouseAge": float,
+        "AveRooms": float,
+        "AveBedrms": float,
+        "Population": float,
+        "AveOccup": float,
+        "Lat": float,
+        "Long": float
         }]}
         ```
 
 
-Please note that the API /predict endpoint will only handle houses in the state of California, and will return an error for all other lat/long ranges. Additionally, errors will be returned for Median Income, Age of the House, Number of Rooms, Bedrooms, Population, and Occupancy if the inputs are not positive floats, an nested in a dictionary inside of a list whose key is "houses." 
+Please note that the API /predict endpoint will only handle houses in the state of California, and will return an error for all other lat/long ranges. Additionally, errors will be returned for Median Income, Age of the House, Number of Rooms, Bedrooms, Population, and Occupancy if the inputs are not positive floats, an nested in a JSON inside of a list whose key is "houses." 
 For more information on this dataset, please refer to sklearn's documentation on the California housing dataset [here](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html).
 
 This API also allows users to pass their names to a /hello endpoint, which will return 
@@ -154,7 +154,7 @@ Or by running the _run.sh_ script in the lab_3 directory.
 
 -[]  What are the benefits of caching?
 
-   -[] Caching an API endpoint improves the performance of the app or page, since repeated actions are stored locally. This improves web page load times and/or app performance through lower latency. Additionally, caching reduces the load on the server because fewer requests need to be made to slower storage systems like disk or network-based systems. Lastly, this translates into potentially greater efficiencies, which include, but are not limited to cost efficiencies and environmental efficiencies. Because caching requires fewer heavy requests, this translates to potentially lower costs and lower emissions. 
+   -[] Caching an API endpoint improves the performance of the app or page, since repeated actions are stored locally. This improves web page load times and/or app performance through lower latency and faster response times. Additionally, caching reduces the load on the server because fewer requests need to be made to slower storage systems like disk or network-based systems. Lastly, this translates into potentially greater efficiencies, which include, but are not limited to cost efficiencies and environmental efficiencies. Because caching requires fewer heavy requests, this translates to potentially lower costs and lower emissions. 
 
 -[] What is the difference between docker and k8s?
 
@@ -165,4 +165,4 @@ Or by running the _run.sh_ script in the lab_3 directory.
    -[] Kubernetes deployments manage the deployment of containerized apps. They can be used to create, update, and delete apps, and they can also be used for horizontal or vertical scaling, if more compute is needed. Importantly, they can monitor the health of pods and apps, and restart pods that fail. Deployments can also reroute traffic to healthy pods if needed. 
 
 -[] What does a Kubernetes Services do? 
-   -[] Kubernetes services are an abstraction that defined a grouping of pods that are deployed by Kubernetes. The grouping of pods share the same purpose, and the service layer helps with the communication and load balancing amongst those pods. Pods can be exposed to the internet with the LoadBalancer service, or can be accessible only within the cluster with the ClusterIP service. In this lab, I utilized the clusterIP service since we are not deploying to the internet. 
+   -[] Kubernetes services are an abstraction that define a grouping of pods that are deployed by Kubernetes. The grouping of pods share the same purpose, and the service layer helps with the communication and load balancing amongst those pods. Pods can be exposed to the internet with the LoadBalancer service, or can be accessible only within the cluster with the ClusterIP service. In this lab, I utilized the clusterIP service since we are not deploying to the internet. Services provide a stable IP for accessing the application, which is especially important because the underlying pods are dynamic and ephemeral. 
