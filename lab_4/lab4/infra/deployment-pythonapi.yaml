@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: house-deployment
-  namespace: w255
+  namespace: morinlandon
 spec:
   selector:
     matchLabels:
@@ -19,7 +19,7 @@ spec:
         command: ['sh', '-c', "until nslookup redis-service; do echo waiting for redis; sleep 2; done"]
       containers:
       - name: house-api
-        image: lab3:1.0
+        image: lab4:latest
         ports:
         - containerPort: 8000
         env:
