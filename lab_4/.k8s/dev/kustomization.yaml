@@ -1,0 +1,8 @@
+---
+namespace: morinlandon
+bases:
+  - ../base
+patches:
+  - path: patch-deployment-lab4.yaml
+    target:
+      kind: Deployment
