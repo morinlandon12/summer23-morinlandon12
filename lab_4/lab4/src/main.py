@@ -45,7 +45,7 @@ class HousePrediction(BaseModel):
 
 @app.on_event("startup")
 async def startup():
-    redis = aioredis.from_url("redis://redis-service.w255")
+    redis = aioredis.from_url("redis://host.docker.internal")
     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
 
 
