@@ -44,7 +44,7 @@ curl -X 'POST' 'https://morinlandon.mids255.com/predict' -L -H 'Content-Type: ap
 
 ## Questions
 1. What are the downsides of using latest as your docker image tag?
-   - “Latest” means “the last build/tag that ran without a specific tag/version specified. It could point to an unstable or insecure version of the image, so it's best to use a specific tag. 
+   - “Latest” means the last build/tag that ran without a specific tag/version specified. It could point to an unstable or insecure version of the image, so it's best to use a specific tag. Furthermore, it could point to an image that is not actually the intended version. 
 
 2. What does kustomize do for us? 
    - Kustomize allows us to temporarily override any previous YAML files that may have been used in development, while preserving those files. It can be useful if you need a different YAML setup for a different type of deployment, like deploying to Azure and AWS, or even just deploying to minikube v. cloud. Just like traditional YAMLs, the kustomize files can be reused for quick and reusable setups. Alongside traditional YAMLs, we can deploy different kustomize setups for different environments. 
