@@ -22,7 +22,7 @@ classifier = pipeline(
     model=model,
     tokenizer=tokenizer,
     device=-1,
-    return_all_scores=True,
+    top_k=None,
 )
 
 logger = logging.getLogger(__name__)
