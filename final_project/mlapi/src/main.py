@@ -33,7 +33,7 @@ app = FastAPI()
 
 @app.on_event("startup")
 async def startup():
-    redis = aioredis.from_url(AZURE_REDIS_URL_REDIS_URL)
+    redis = aioredis.from_url(AZURE_REDIS_URL)
     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
 
 
