@@ -11,10 +11,10 @@ spec:
           image: w255mids.azurecr.io/morinlandon/project:[TAG]
           resources:
             requests:
-              cpu: 2100m
+              cpu: 2
               memory: 4Gi
             limits:
-              cpu: 4000m
+              cpu: 2
               memory: 4Gi
           imagePullPolicy: Always
           ports:
@@ -24,8 +24,8 @@ spec:
               scheme: HTTP
               path: /health
               port: 8000
-            initialDelaySeconds: 1
-            periodSeconds: 3
+            initialDelaySeconds: 5
+            periodSeconds: 5
           livenessProbe:
             httpGet:
               scheme: HTTP

@@ -18,7 +18,7 @@ spec:
         storageClassName: "standard"
         resources:
           requests:
-            storage: 500Mi
+            storage: 1Gi
   template:
     metadata:
       labels:
@@ -30,8 +30,8 @@ spec:
           image: redis:7.0
           resources:
             requests:
-              cpu: 200m
-              memory: 500Mi
+              cpu: 1
+              memory: 1Gi
           command: ["redis-server"]
           args: ["/etc/redis.conf"]
           env:
