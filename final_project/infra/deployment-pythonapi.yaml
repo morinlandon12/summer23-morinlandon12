@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sentiment-deployment
+  namespace: final-proj
+spec:
+  selector:
+    matchLabels:
+      app: sentiment-api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sentiment-api
+    spec:
+      initContainers:
+      - name: init-redis
+        image: busybox:1.28
+        command: ['sh', '-c', "until nslookup redis-service; do echo waiting for redis; sleep 2; done"]
+      containers:
+      - name: sentiment-api
+        image: final_mini:1.0
+        ports:
+        - containerPort: 8000
+        env:
+        - name: REDIS_HOST
+          value: "service-redis"
+        - name: REDIS_PORT
+          value: "6379"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          terminationGracePeriodSeconds: 60
+
+
