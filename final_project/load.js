@@ -38,7 +38,7 @@ const generator = (cacheRate) => {
   }
 }
 
-const NAMESPACE = __ENV.NAMESPACE
+const NAMESPACE = `morinlandon`
 const BASE_URL = `https://${NAMESPACE}.mids255.com`;
 const CACHE_RATE = .95
 

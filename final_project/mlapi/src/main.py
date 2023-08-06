@@ -14,7 +14,7 @@ from fastapi_cache.decorator import cache
 from redis import asyncio as aioredis
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, pipeline
 
-model_path = "winegarj/distilbert-base-uncased-finetuned-sst2"
+model_path = "../../distilbert-base-uncased-finetuned-sst2"
 model = AutoModelForSequenceClassification.from_pretrained(model_path)
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 classifier = pipeline(
@@ -52,6 +52,7 @@ class SentimentResponse(BaseModel):
 
 
 @app.post("/predict", response_model=SentimentResponse)
+@FastAPICache(cache_time=10800) 
 def predict(sentiments: SentimentRequest) -> SentimentResponse:
     return {"predictions": classifier(sentiments.text)}
 
