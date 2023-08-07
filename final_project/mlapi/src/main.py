@@ -14,7 +14,10 @@ from fastapi_cache.decorator import cache
 from redis import asyncio as aioredis
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, pipeline
 
-model_path = "../../distilbert-base-uncased-finetuned-sst2"
+current_directory = os.getcwd()
+
+model_path = os.path.join(current_directory, "./distilbert-base-uncased-finetuned-sst2")
+
 model = AutoModelForSequenceClassification.from_pretrained(model_path)
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 classifier = pipeline(
