@@ -24,8 +24,8 @@ spec:
               scheme: HTTP
               path: /health
               port: 8000
-            initialDelaySeconds: 5
-            periodSeconds: 5
+            initialDelaySeconds: 1
+            periodSeconds: 3
           livenessProbe:
             httpGet:
               scheme: HTTP

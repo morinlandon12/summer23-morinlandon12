@@ -55,7 +55,7 @@ class SentimentResponse(BaseModel):
 
 
 @app.post("/predict", response_model=SentimentResponse)
-@FastAPICache(cache_time=10800) 
+@cache(expire=3600)
 def predict(sentiments: SentimentRequest) -> SentimentResponse:
     return {"predictions": classifier(sentiments.text)}
 
