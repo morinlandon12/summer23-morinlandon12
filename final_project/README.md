@@ -1,37 +1,7 @@
-# Final Project: Full End-to-End Machine Learning API
-
-<p align="center">
-    <!--Hugging Face-->
-        <img src="https://user-images.githubusercontent.com/1393562/197941700-78283534-4e68-4429-bf94-dce7ab43a941.svg" width=7%>
-    <!--PLUS SIGN-->
-        <img src="https://user-images.githubusercontent.com/1393562/190876627-da2d09cb-5ca0-4480-8eb8-830bdc0ddf64.svg" width=7%>
-    <!--FAST API-->
-        <img src="https://user-images.githubusercontent.com/1393562/190876570-16dff98d-ccea-4a57-86ef-a161539074d6.svg" width=7%>
-    <!--PLUS SIGN-->
-        <img src="https://user-images.githubusercontent.com/1393562/190876627-da2d09cb-5ca0-4480-8eb8-830bdc0ddf64.svg" width=7%>
-    <!--REDIS LOGO-->
-        <img src="https://user-images.githubusercontent.com/1393562/190876644-501591b7-809b-469f-b039-bb1a287ed36f.svg" width=7%>
-    <!--PLUS SIGN-->
-        <img src="https://user-images.githubusercontent.com/1393562/190876627-da2d09cb-5ca0-4480-8eb8-830bdc0ddf64.svg" width=7%>
-    <!--KUBERNETES-->
-        <img src="https://user-images.githubusercontent.com/1393562/190876683-9c9d4f44-b9b2-46f0-a631-308e5a079847.svg" width=7%>
-    <!--PLUS SIGN-->
-        <img src="https://user-images.githubusercontent.com/1393562/190876627-da2d09cb-5ca0-4480-8eb8-830bdc0ddf64.svg" width=7%>
-    <!--Azure-->
-        <img src="https://user-images.githubusercontent.com/1393562/192114198-ac03d0ef-7fb7-4c12-aba6-2ee37fc2dcc8.svg" width=7%>
-    <!--PLUS SIGN-->
-        <img src="https://user-images.githubusercontent.com/1393562/190876627-da2d09cb-5ca0-4480-8eb8-830bdc0ddf64.svg" width=7%>
-    <!--K6-->
-        <img src="https://user-images.githubusercontent.com/1393562/197683208-7a531396-6cf2-4703-8037-26e29935fc1a.svg" width=7%>
-    <!--PLUS SIGN-->
-        <img src="https://user-images.githubusercontent.com/1393562/190876627-da2d09cb-5ca0-4480-8eb8-830bdc0ddf64.svg" width=7%>
-    <!--GRAFANA-->
-        <img src="https://user-images.githubusercontent.com/1393562/197682977-ff2ffb72-cd96-4f92-94d9-2624e29098ee.svg" width=7%>
-</p>
+# Final Project: Full End-to-End Sentiment Score API
 
 - [Final Project: Full End-to-End Machine Learning API](#final-project-full-end-to-end-machine-learning-api)
   - [Project Overview](#project-overview)
-  - [Lab Objectives](#lab-objectives)
   - [Helpful Information](#helpful-information)
     - [Model Background](#model-background)
     - [Pydantic Model Expectations](#pydantic-model-expectations)
@@ -41,78 +11,105 @@
   - [Grading](#grading)
   - [Time Expectations](#time-expectations)
 
-## Project Overview
+## API Build Overview
 
-The goal of `final_project` is to take everything you have learned in this class and deploy a fully functional prediction API accessible to end users.
+This is an API which classifies text as either positive or negative and provides the client with a sentiment score between 0 and 1 for user-input text. 
 
-You will:
+In this build we will:
 
-- Utilize `Poetry` to define your application dependancies
+- Utilize `Poetry` to define our application dependancies
 - Package up an existing NLP model ([DistilBERT](https://arxiv.org/abs/1910.01108)) for running efficient CPU-based sentiment analysis from `HuggingFace`
 - Create an `FastAPI` application to serve prediction results from user requests
-- Test your application with `pytest`
-- Utilize `Docker` to package your application as a logic unit of compute
-- Cache results with `Redis` to protect your endpoint from abuse
-- Deploy your application to `Azure` with `Kubernetes`
-- Use `K6` to load test your application
-- Use `Grafana` to visualize and understand the dynamics of your system
+- Test our application with `pytest`
+- Utilize `Docker` to package our application as a logic unit of compute
+- Cache results with `Redis` to protect our endpoint from abuse
+- Deploy our application to `Azure` with `Kubernetes` at morinlandon.mids255.com
+- Use `K6` to load test our application
+- Use `Grafana` to visualize and understand the dynamics of our system
 
-## Lab Objectives
+The `/predict` endpoint expects the following input as an example: 
 
-- [ ] Write pydantic models to match the specified input model
-  - ```{"text": ["example 1", "example 2"]}```
-- [ ] Pull the [following model](https://huggingface.co/winegarj/distilbert-base-uncased-finetuned-sst2) locally to allow for loading into your application. Put this at the root of your project directory for an easier time.
-- [ ] Add the model files to your `.gitignore` since the file is large and we don't want to manage `git-lfs` and incur cost for wasted space. `HuggingFace` is hosting the model for us.
-- [ ] Create and execute `pytest` tests to ensure your application is working as intended
-- [ ] Build and deploy your application locally (Hint: Use `kustomize`)
-- [ ] Push your image to `ACR`.
-  - [ ] Use a prefix based on your namespace, and call the image `project`
-- [ ] Deploy your application to `AKS` similar to labs 4/5
-- [ ] Run `k6` against your application with the provided `load.js`
-- [ ] Capture screenshots of your `grafana` dashboard for your service/workload during the execution of your `k6` script
-- [ ] Feel extremely proud about all the learning you went through over the semester and how this will help you develop professionally and enable you to deploy an API effectively during capstone. There is much to learn, but getting the fundamentals are key.
+Expected Input: 
+```shell
+curl -X 'POST' 'https://morinlandon.mids255.com/predict' \
+    -L -H 'Content-Type: application/json' -d \
+                '{"text": ["I hate you.", "I love you."]}'
+```
+And will generate the following output:
 
-## Helpful Information
+Expected Output:
+```json
+{"predictions":
+    [
+        [
+            {"label":"NEGATIVE","score":0.9006614089012146},{"label":"POSITIVE","score":0.0993385836482048}
+        ],
+        [
+            {"label":"POSITIVE","score":0.9963012933731079},{"label":"NEGATIVE","score":0.0036986342165619135}
+        ]
+    ]
+}
 
-### Model Background
+```
 
-Please review the `train.py` to see how the model was trained and pushed to `HuggingFace` as an artifact store for models and their associated configuration. This model took 5 minutes to transfer learn on 2x A4000 GPUs with a 256 batch size, taking 15 GB of memory on each GPU. Training on CPUs would likely have taken several days. The given implementation allows for a maximum text sequences of `512` tokens for each input. Do **not** try to run the training script.
 
-Model loading examples are provided in `example.py` and in this file we directly load the model from `HuggingFace` however this is extremely inefficient given the size of the underlying model (256 MB) for a production enviornment. We will pull down the model locally as part of our build process.
+## Directory Preview & Local Deployment For Testing
+The model files and build scripts may be previewed in this tree diagram: 
 
-Model prediction pipelines are included in the `transformers` API provided by `HuggingFace` which dramatically reduces the amount of complexity in the Inferencing application. Example is provided in `mlapi/example.py` and is instrumented already in your `main.py` application.
+```shell
+├── Dockerfile
+├── README.md
+├── azure_login_aks.sh
+├── build_push.sh
+├── example.py
+├── grader.sh
+├── infra
+│   ├── deployment-pythonapi.yaml
+│   ├── deployment-redis.yaml
+│   ├── namespace.yaml
+│   ├── service-prediction.yaml
+│   └── service-redis.yaml
+├── load.js
+├── mlapi
+│   ├── distilbert-base-uncased-finetuned-sst2
+│   │   ├── README.md
+│   │   ├── config.json
+│   │   ├── pytorch_model.bin
+│   │   ├── special_tokens_map.json
+│   │   ├── tokenizer.json
+│   │   ├── tokenizer_config.json
+│   │   ├── training_args.bin
+│   │   └── vocab.txt
+│   ├── poetry.lock
+│   ├── pyproject.toml
+│   ├── src
+│   │   └── main.py
+│   └── tests
+│       ├── conftest.py
+│       ├── test_docs.py
+│       └── test_mlapi.py
+├── run.sh
+└── trainer
+    └── train.py
+```
+The mlapi directory contains the model, as well as the app that builds the model on the FastAPI framework. 
 
-### Pydantic Model Expectations
+To deploy this locally, the user can run the script ```run.sh```. This will deploy the model to a minikube Kubernetes architecture and the model can be curled at ```http://localhost:8000/predict```. The user may leverage pytest to test the API endpoint by running the following in the mlapi directory:
 
-We provide to you a pytest file `test_mlapi.py` which has the structure of how you should design your pydantic models. You will have to do a little bit of reverse engineering so that your model matches our expectations.
+```shell
+poetry run pytest
+```
 
-### Poetry Dependancies
+### Model Deployment to Azure Kubernetes Services
 
-Do not run `poetry update` it will take a long time due to the handling of `torch` dependencies.
+The model can be containerized using the shell script ```build_push.sh```. This script builds the Docker container using the Multistage build in the ```Dockerfile``` and pushes the containers to Azure. From there, you can run the ```azure_login_aks.sh``` script to push the containers to Azure Kubernetes Services. This file will reference the kustomize setup in ```.k8s/prod```.
 
-### Git Large File Storage (LFS)
+### API Performance and Load Handling
 
-You might need to install `git lfs` <https://git-lfs.github.com/>
+The model performs to project standards with over 75.5 ops/second and a p(99) latency of less than 0.635 seconds.
 
-## Submission
+![Latency and Requests P.1](https://github.com/UCB-W255/summer23-morinlandon12/blob/ac74b6a81e0327210b9db2b547acf82e0aa3bc44/final_project/Screenshot%202023-08-07%20at%209.16.10%20PM.png)
 
-All code will be graded off your repo's `main` branch and `AKS` deployment. No additional forms or submission processes are needed.
+![Latency and Requests P.2](https://github.com/UCB-W255/summer23-morinlandon12/blob/ac74b6a81e0327210b9db2b547acf82e0aa3bc44/final_project/Screenshot%202023-08-07%20at%209.16.00%20PM.png)
 
-## Grading
-
-All items are conditional on a `95%` cache rate, and after a `10 minute` sustained load:
-
-|                  **Criteria**                  |                          **0%**                          |                            **50%**                            |                        **90%**                         |                   **100%**                   |
-|:---------------------------------------------: |:-------------------------------------------------------: |:------------------------------------------------------------: |:-----------------------------------------------------: |:-------------------------------------------: |
-| _Functional API_                               | No Endpoints Work                                        | Some Endpoints Functional                                     | Most Endpoints Functional                              | All Criteria Met                             |
-| _Caching_                                      | No Attempt at Caching                                    | Caching system instantiated but not used                      | Caching system created but missing some functionality  | All Criteria Met                             |
-| _Kubernetes Practices_                         | No Attempt at Deployments                                | Deployments exist but lack key functionality                  | Kubernetes deployment mostly functional                | All Criteria Met                             |
-| _Testing_                                      | No Testing is done                                       | Minimal amount of testing done. No testing of new endpoints.  | Only "happy path" tested and with minimal cases        | All Criteria Met                             |
-| _Passing Provided Tests_                       | Pydantic model does not adhere to our given pytest file  | Pydantic model somewhat passes pytest file                    | Pydantic model mostly passes pytest file               | All Criteria Met                             |
-| _Model Loading_                                | Model loads from hugging face on API instantiation       | N/A                                                           | N/A                                                    | Model is loaded into the container at build  |
-| _Predict Endpoint Performance_                 | Endpoint performs at 1 request/second                    | Endpoint performs at 5 requests/second                        | Endpoint performs at 9 request/second                  | Endpoint performs at 10 requests/second      |
-| _Predict Endpoint Latency @ 10 Virtual Users_  | p(99) < 10 seconds                                       | p(99) < 5 seconds                                             | p(99) < 3 seconds                                      | p(99) < 2 seconds                            |
-
-## Time Expectations
-
-This project will take approximately ~10 hours.
+![Latency and Requests P.3](https://github.com/UCB-W255/summer23-morinlandon12/blob/ac74b6a81e0327210b9db2b547acf82e0aa3bc44/final_project/Screenshot%202023-08-07%20at%209.16.21%20PM.png)
