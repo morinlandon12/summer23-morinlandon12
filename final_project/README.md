@@ -1,15 +1,11 @@
 # Final Project: Full End-to-End Sentiment Score API
 
 - [Final Project: Full End-to-End Machine Learning API](#final-project-full-end-to-end-machine-learning-api)
-  - [Project Overview](#project-overview)
-  - [Helpful Information](#helpful-information)
-    - [Model Background](#model-background)
-    - [Pydantic Model Expectations](#pydantic-model-expectations)
-    - [Poetry Dependancies](#poetry-dependancies)
-    - [Git Large File Storage (LFS)](#git-large-file-storage-lfs)
-  - [Submission](#submission)
-  - [Grading](#grading)
-  - [Time Expectations](#time-expectations)
+  - [API Build Overview](#api-build-overview)
+  - [Directory Preview & Local Deployment For Testing](#directory-preview-&-local-deployment-for-testing)
+  - [Model Deployment to Azure Kubernetes Services](#model-deployment-to-azure-kubernetes-services)
+  - [API Performance and Load Handling](#api-performance-and-load-handling)
+
 
 ## API Build Overview
 
@@ -100,16 +96,14 @@ To deploy this locally, the user can run the script ```run.sh```. This will depl
 poetry run pytest
 ```
 
-### Model Deployment to Azure Kubernetes Services
+## Model Deployment to Azure Kubernetes Services
 
 The model can be containerized using the shell script ```build_push.sh```. This script builds the Docker container using the Multistage build in the ```Dockerfile``` and pushes the containers to Azure. From there, you can run the ```azure_login_aks.sh``` script to push the containers to Azure Kubernetes Services. This file will reference the kustomize setup in ```.k8s/prod```.
 
-### API Performance and Load Handling
+## API Performance and Load Handling
 
 The model performs to project standards with over 75.5 ops/second and a p(99) latency of less than 0.635 seconds.
 
 ![Latency and Requests P.1](https://github.com/UCB-W255/summer23-morinlandon12/blob/ac74b6a81e0327210b9db2b547acf82e0aa3bc44/final_project/Screenshot%202023-08-07%20at%209.16.10%20PM.png)
-
-![Latency and Requests P.2](https://github.com/UCB-W255/summer23-morinlandon12/blob/ac74b6a81e0327210b9db2b547acf82e0aa3bc44/final_project/Screenshot%202023-08-07%20at%209.16.00%20PM.png)
 
 ![Latency and Requests P.3](https://github.com/UCB-W255/summer23-morinlandon12/blob/ac74b6a81e0327210b9db2b547acf82e0aa3bc44/final_project/Screenshot%202023-08-07%20at%209.16.21%20PM.png)
