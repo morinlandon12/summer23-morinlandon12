@@ -3,6 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: redis
+  namespace: morinlandon
 data:
   master.conf: |
     bind 0.0.0.0

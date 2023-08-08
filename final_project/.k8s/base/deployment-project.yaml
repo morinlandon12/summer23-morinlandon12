@@ -20,11 +20,11 @@ spec:
           image: morinlandon/project:latest
           resources:
             requests:
-              cpu: 2
-              memory: 4Gi
+              cpu: 1
+              memory: 2Gi
             limits:
-              cpu: 2
-              memory: 4Gi
+              cpu: 1
+              memory: 2Gi
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000

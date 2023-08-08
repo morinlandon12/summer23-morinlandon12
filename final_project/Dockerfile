@@ -1,5 +1,5 @@
 # Base Arguements to leverage across build stages
-ARG APP_DIR=/final_project/mlapi
+ARG APP_DIR=/final_project
 
 #############
 # Build image
@@ -19,8 +19,7 @@ RUN curl -sSL https://install.python-poetry.org | python -
 ENV PATH /root/.local/bin:$PATH
 
 # change work directory for where our app will live
-WORKDIR ${APP_DIR}
-COPY pyproject.toml poetry.lock ./
+COPY ./mlapi/pyproject.toml ./mlapi/poetry.lock ./
 
 # Copy over the venv including any symbolic links, do not install development/testing libraries when install poetry dependencies
 RUN python -m venv --copies ${APP_DIR}/venv
@@ -31,12 +30,11 @@ RUN . ${APP_DIR}/venv/bin/activate && poetry install --only main
 #############
 FROM python:3.10-slim as prod
 ARG APP_DIR
-
 COPY --from=build ${APP_DIR}/venv ${APP_DIR}/venv/
 ENV PATH ${APP_DIR}/venv/bin:$PATH
 
 WORKDIR ${APP_DIR}/
-COPY . ./
+COPY ./mlapi ./
 
 HEALTHCHECK --start-period=30s CMD python -c "import requests; requests.get('http://localhost:8000/health', timeout=2)"
 

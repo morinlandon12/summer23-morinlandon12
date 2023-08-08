@@ -29,7 +29,6 @@ classifier = pipeline(
 )
 
 logger = logging.getLogger(__name__)
-LOCAL_REDIS_URL = "redis://redis:6379"
 AZURE_REDIS_URL = "redis://redis.morinlandon"
 app = FastAPI()
 
@@ -56,7 +55,7 @@ class SentimentResponse(BaseModel):
 
 @app.post("/predict", response_model=SentimentResponse)
 @cache(expire=3600)
-def predict(sentiments: SentimentRequest) -> SentimentResponse:
+async def predict(sentiments: SentimentRequest) -> SentimentResponse:
     return {"predictions": classifier(sentiments.text)}
 
 

@@ -1,18 +1,19 @@
 #!/bin/bash
 minikube start --kubernetes-version=v1.25.4 --container-runtime=docker --vm=true
 
+IMAGE_NAME=project
+APP_NAME=project
+NAMESPACE=morinlandon
+
+kubectl config use-context minikube
+kubectl config set-context --current --namespace=${NAMESPACE}
+
 eval $(minikube docker-env)
-
-IMAGE_NAME=final_mini
-APP_NAME=final_mini
-
-# Create poetry environment and train model using environment
-# move model to the src directory to be picked up by Docker
-poetry env remove python3.11
-poetry install
 
 # Run pytest within poetry virtualenv
 cd mlapi
+poetry env remove python3.11
+poetry install
 poetry run pytest -vv -s
 
 # stop and remove image in case this script was run before
@@ -21,18 +22,15 @@ docker rm ${APP_NAME}
 
 cd ..
 # rebuild and run the new image
-docker build -t ${IMAGE_NAME}:1.0 .
-docker run -d --name ${IMAGE_NAME} -p 8000:8000 ${IMAGE_NAME}:1.0
+docker build --platform linux/amd64 -t ${IMAGE_NAME} .
+docker run -d --name ${IMAGE_NAME} -p 8000:8000 ${IMAGE_NAME}:latest
 
-kubectl apply -f infra/namespace.yaml -n final-proj
-kubectl apply -f infra/deployment-redis.yaml -n final-proj
-kubectl apply -f infra/deployment-pythonapi.yaml -n final-proj
-kubectl apply -f infra/service-redis.yaml -n final-proj
-kubectl apply -f infra/service-prediction.yaml -n final-proj
+kubectl kustomize .k8s/base
+kubectl apply -f .k8s/base
 
-kubectl wait deployment -n final-proj sentiment-deployment --for condition=Available=True --timeout=60s
+kubectl wait deployment -n morinlandon project --for condition=Available=True --timeout=60s
 
-kubectl port-forward service/prediction -n final-proj 8000:8000 &
+kubectl port-forward service/project -n morinlandon 8000:8000 &
 
 
 #wait for the /health endpoint to return a 200
@@ -58,10 +56,10 @@ curl -o /dev/null -s "%{http_code}\n" -X POST "http://localhost:8000/predict" -H
 # output logs for the container
 docker logs ${APP_NAME}
 
-kubectl delete all --all -n final-proj
+kubectl delete all --all -n morinlandon
 
-# Delete the final-proj namespace
-kubectl delete namespace final-proj
+# Delete the morinlandon namespace
+kubectl delete namespace morinlandon
 
 # Stop Minikube
 minikube stop

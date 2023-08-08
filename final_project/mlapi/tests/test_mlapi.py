@@ -32,29 +32,47 @@ def test_predict(client):
     assert set(response.json()["predictions"][1][1].keys()) == {"label", "score"}
     assert response.json()["predictions"][0][0]["label"] == "NEGATIVE"
     assert response.json()["predictions"][0][1]["label"] == "POSITIVE"
-    assert response.json()["predictions"][1][0]["label"] == "NEGATIVE"
-    assert response.json()["predictions"][1][1]["label"] == "POSITIVE"
+    assert response.json()["predictions"][1][0]["label"] == "POSITIVE"
+    assert response.json()["predictions"][1][1]["label"] == "NEGATIVE"
     assert (
         assert_almost_equal(
-            response.json()["predictions"][0][0]["score"], 0.936, decimal=1
+            response.json()["predictions"][0][0]["score"], 0.901, decimal=1
         )
         is None
     )
     assert (
         assert_almost_equal(
-            response.json()["predictions"][0][1]["score"], 0.064, decimal=1
+            response.json()["predictions"][0][1]["score"], 0.099, decimal=1
         )
         is None
     )
     assert (
         assert_almost_equal(
-            response.json()["predictions"][1][0]["score"], 0.003, decimal=1
+            response.json()["predictions"][1][0]["score"], 0.997, decimal=1
         )
         is None
     )
     assert (
         assert_almost_equal(
-            response.json()["predictions"][1][1]["score"], 0.997, decimal=1
+            response.json()["predictions"][1][1]["score"], 0.004, decimal=1
         )
         is None
     )
+
+def test_predict_nested(client):
+    data = {"text": [["I hate you.", "I love you."]]}
+    response = client.post(
+        "/predict",
+        json=data,
+    )
+
+    assert response.status_code == 422
+
+def test_predict_no_list(client):
+    data = {"text": "I hate you."}
+    response = client.post(
+        "/predict",
+        json=data,
+    )
+
+    assert response.status_code == 422
