@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: project
-          image: w255mids.azurecr.io/morinlandon/project:bf0a749
+          image: w255mids.azurecr.io/morinlandon/project:0f8fd5a
           resources:
             requests:
               cpu: 2

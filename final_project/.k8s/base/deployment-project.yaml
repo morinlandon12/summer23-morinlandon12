@@ -70,5 +70,5 @@ spec:
     kind: Deployment
     name: project
   minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 50
+  maxReplicas: 40
+  targetCPUUtilizationPercentage: 20
