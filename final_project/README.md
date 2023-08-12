@@ -102,8 +102,18 @@ The model can be containerized using the shell script ```build_push.sh```. This 
 
 ## API Performance and Load Handling
 
-The model performs to project standards with over 75.5 ops/second and a p(99) latency of less than 0.635 seconds.
+The model performs to project standards with over 100 ops/second and a p(99) latency of less than 0.534 seconds, when utilizing 40 max pods and 20% utilization rate.
+
+Horizontal autoscaling success can be seen through increased ops/second and a flattening latency curve as the pods ramp up to even the load.
+
+### 10 max pods and 50% utilization rate
 
 ![Latency and Requests P.1](https://github.com/UCB-W255/summer23-morinlandon12/blob/ac74b6a81e0327210b9db2b547acf82e0aa3bc44/final_project/Screenshot%202023-08-07%20at%209.16.10%20PM.png)
 
 ![Latency and Requests P.3](https://github.com/UCB-W255/summer23-morinlandon12/blob/ac74b6a81e0327210b9db2b547acf82e0aa3bc44/final_project/Screenshot%202023-08-07%20at%209.16.21%20PM.png)
+
+### 40 max pods and 20% utilization rate
+
+![Latency and Requests P.2](https://github.com/UCB-W255/summer23-morinlandon12/blob/cc2db77c4f78321aa5b73e23fd0b2c364c419674/final_project/Screenshot%202023-08-11%20at%209.26.05%20PM.png)
+
+![Latency and Requests P.4](https://github.com/UCB-W255/summer23-morinlandon12/blob/cc2db77c4f78321aa5b73e23fd0b2c364c419674/final_project/Screenshot%202023-08-11%20at%209.25.49%20PM.png)
