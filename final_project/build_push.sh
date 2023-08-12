@@ -1,6 +1,8 @@
 #!/bin/bash
 IMAGE_PREFIX=$(az account list --all | jq '.[].user.name' | grep -i berkeley.edu | awk -F@ '{print $1}' | tr -d '"' | tr -d "." | tr '[:upper:]' '[:lower:]' | tr '_' '-' | uniq)
-
+cd mlapi
+poetry run pytest
+cd ..
 # FQDN = Fully-Qualified Domain Name
 IMAGE_NAME=project
 ACR_DOMAIN=w255mids.azurecr.io
